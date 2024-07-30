@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: EC2 Instances and S3 Bucket
+Resources:
+  WebServerInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      ImageId: "ami-00db8dadb36c9815e"
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            VolumeSize: 8
+            VolumeType: gp2
+      Tags:
+        - Key: Name
+          Value: WebServer
+  
+  AppServerInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      ImageId: "ami-00db8dadb36c9815e"
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            VolumeSize: 10
+            VolumeType: gp2
+      Tags:
+        - Key: Name
+          Value: AppServer
+  InvoiceBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: myinvoicebucket-clovise24
+      AccessControl: Private
+
+Outputs:
+  WebServerInstanceId:
+    Description: ID of the web server instance
+    Value: !Ref WebServerInstance
+  AppServerInstanceId:
+    Description: ID of the app server instance
+    Value: !Ref AppServerInstance
+  InvoiceBucketName:
+    Description: Name of the S3 bucket for invoices
+    Value: !Ref InvoiceBucket
