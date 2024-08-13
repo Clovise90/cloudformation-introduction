@@ -23,6 +23,11 @@ Parameters:
     Default: 0.0.0.0/0
     AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
     ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
+  
+  BucketName:
+    Description: This parameter specifies the bucket name
+    Type: String
+    Default: "jjtech-2024-prod-bucket-janet"
 
 Resources:  
   InstanceSecurityGroup:
@@ -36,6 +41,14 @@ Resources:
         CidrIp:
           Ref: SSHLocation
 
+  ProductionBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref BucketName
+      
+
+
+
 Outputs:
   SecurityGroupId:
     Description: security group id value
@@ -44,9 +57,23 @@ Outputs:
       - GroupId
     Export:
       Name: WebSeverSecurityGroupId  
+
   VpcId:
     Description: VPC id to which the Security group belongs too.
     Value: !GetAtt 
       - InstanceSecurityGroup
       - VpcId
+
+  S3BucketArn:
+    Description: bucket details
+    Value: !GetAtt 
+      - ProductionBucket
+      - Arn
+
+  S3BucketDomainName:
+    Description: getting the bucket domain name 
+    Value: !GetAtt 
+      - ProductionBucket
+      - DomainName
+  
 

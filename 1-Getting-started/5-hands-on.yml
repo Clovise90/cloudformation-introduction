@@ -4,3 +4,70 @@
 # Webserver with 8gb EBS
 # Appserver with 10gb EBS
 # One S3 bucket to store invoice pdf files
+
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Master stack PathToMasterStackFile'
+Parameters:
+  ProdInstanceTypeParameter:
+    Description: Enter t2.micro, m1.small, or m1.large. Default is t2.micro.
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t2.micro
+      - m1.small
+      - m1.large
+  DevInstanceTypeParameter:
+    Description: Enter t2.micro, m1.small, or m1.large. Default is t2.medium.
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t2.micro
+      - t2.medium
+      - t2.xlarge
+
+
+Resources:
+  Webserver:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: "ami-074be47313f84fa38"
+      InstanceType:
+        Ref: ProdInstanceTypeParameter
+      KeyName: "wawa-keypair"
+      BlockDeviceMappings: 
+      - DeviceName: "/dev/sdm"
+        Ebs: 
+          VolumeType: "io1"
+          Iops: "200"
+          DeleteOnTermination: true
+          VolumeSize: "8"
+      Tags:
+        - Key: Name
+          Value: demo-ec2
+        - Key: createdBy
+          Value: DevOps Team
+
+  Appserver:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: "ami-074be47313f84fa38"
+      InstanceType: !Ref DevInstanceTypeParameter
+      KeyName: "wawa-keypair"
+      BlockDeviceMappings: 
+      - DeviceName: "/dev/sdm"
+        Ebs: 
+          VolumeType: "io1"
+          Iops: "100"
+          DeleteOnTermination: true
+          VolumeSize: "10"
+      Tags:
+        - Key: Name
+          Value: demo-ec2
+        - Key: createdBy
+          Value: DevOps Team
+
+  S3BucketInvoice:
+    Type : AWS::S3::Bucket
+    Properties:
+      BucketName: "s3-invoice-template-wawa-2024"
+

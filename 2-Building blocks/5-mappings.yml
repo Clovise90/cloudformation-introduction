@@ -64,16 +64,16 @@ Mappings:
   EC2TypeBasedOnEnv:
     development: 
       instanceType: t2.nano
-      keyName: dev-key
+    #  keyName: dev-key
     testing:
       instanceType: t2.micro
-      keyName: tst-key
+    #  keyName: tst-key
     acceptance:
       instanceType: t2.small
-      keyName: acc-key
+    #  keyName: acc-key
     production:
       instanceType: t2.medium
-      keyName: prod-key
+   #   keyName: prod-key
 
 Resources:
   EC2Instance:
